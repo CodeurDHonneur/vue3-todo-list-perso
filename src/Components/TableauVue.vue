@@ -1,7 +1,7 @@
 <template>
   <div class="contain-table">
     <div class="toutCocher">
-        <input type="checkbox" id="checkedAll">
+        <input type="checkbox" id="checkedAll" @click="toutCocher">
         <label for="checkedAll">Tout chocher</label>
     </div>
     
@@ -91,9 +91,7 @@
         <tr>
           <th colspan="5">
             <div class="container-button-tableau">
-                <div> <input type="radio" id="toutAfficher" name="filtrage"> <label for="toutAfficher" >Tout afficher</label> </div>
-                <div> <input type="radio" id="traitees" name="filtrage"> <label for="traitees" >Traîtées</label></div>
-                <div> <input type="radio" id="nonTraitees" name="filtrage"> <label for="nonTraitees" >Non traîtées</label> </div>
+              <button v-for="btn in buttons" :key="btn.id" @click="filtre(btn.option)">{{ btn.text }}</button>
             </div>
           </th>
         </tr>
@@ -107,13 +105,19 @@ import { ref, watch } from "vue";
 
 let nbrTraitees = ref(0);
 let nbrNonTraitees = ref(0);
+let checkedAll = ref(false);
 
-
-
+const buttons = [
+  {id: 0, option: "all", text: "Tout afficher"},
+  {id: 1, option: "traitees", text: "Traîtées"},
+  {id: 2, option: "nonTraintees", text: "Non traîtées"},
+]
 const emit = defineEmits([
     "change-etat",
     "sup-todo",
-    "modif-todo"
+    "modif-todo",
+    "tout-cocher",
+    "filtrage"
 ]);
 
 
@@ -123,7 +127,7 @@ const props = defineProps({
 
 
 watch(() => props.todoArray, (array) => {
-    console.log(props.todoArray, array);
+  
     nbrTraitees = array.filter(todo => todo.etat == true).length;
     nbrNonTraitees = array.filter(todo => todo.etat == false).length;
 }, {deep: true});
@@ -156,6 +160,16 @@ function supp(todo) {
     emit("sup-todo", todo);
 }
 
+function toutCocher(){
+  checkedAll.value = !checkedAll.value;
+  emit("tout-cocher", checkedAll.value);
+}
+
+
+function filtre(value){
+  console.log(value);
+  emit("filtrage", value);
+}
 </script>
 
 <style scoped>

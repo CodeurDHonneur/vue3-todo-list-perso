@@ -17,6 +17,8 @@
      @change-etat="modifEtat"
      @sup-todo="supTodo"
      @modif-todo="recupTodoAModif"
+     @tout-cocher="toutCocher"
+     @filtrage="filtrage"
      />
 
     </div>
@@ -65,17 +67,32 @@ function modificationTodoFaite(list){
   if(index !== -1){
     todoArray.value[index] = list;
   }
-
- 
-
 }
 
+const toutCocher = (bool) => {
+  todoArray.value.map(todo => todo.etat = bool);
+}
+
+const filtrage = (value) => {
+  console.log(value)
+  switch(value){
+    case "all" : 
+      return todoArray.value;
+
+    case "traitees":
+      return todoArray.value = todoArray.value.filter(todo => todo.etat == true);
+    
+    case "nonTraintees":
+      return todoArray.value = todoArray.value.filter(todo => todo.etat == false);
+  }
+}
 </script>
 
 <style>
 /*********** Contain ***********/
 .contain {
-  width: 800px;
+  margin: 0 auto;
+  width: 1000px;
   background-color: white;
   height: 800px;
   text-align: center;
